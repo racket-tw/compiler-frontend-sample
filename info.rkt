@@ -1,6 +1,9 @@
 #lang info
 (define collection "compiler-frontend-sample")
-(define deps '("base"))
+(define deps '("base"
+               "nanopass"
+               "megaparsack-lib"
+               "functional-lib"))
 (define build-deps '("scribble-lib" "racket-doc" "rackunit-lib"))
 (define scribblings '(("scribblings/compiler-frontend-sample.scrbl" ())))
 (define pkg-desc "Description Here")
