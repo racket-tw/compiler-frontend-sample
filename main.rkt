@@ -41,3 +41,4 @@
 (parse #'(let a 1))
 (parse #'(let id (λ (x) x)))
 (parse #'(let a-id (id a)))
+(parse #'(let no-arg (foo)))
