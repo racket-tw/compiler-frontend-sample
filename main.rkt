@@ -10,14 +10,15 @@
 
 (define-language L0
   (terminals
+   (syntax (stx))
    (identifier (name param))
    (stx-number (num)))
   (Expr (expr)
         num
         name
-        (let name expr)
-        (λ (param* ...) expr)
-        (expr expr* ...)))
+        (let stx name expr) => (let name expr)
+        (λ stx (param* ...) expr) => (λ (param* ...) expr)
+        (stx expr expr* ...) => (expr expr* ...)))
 
 (define-pass parse : * (stx) -> L0 ()
   (Expr : * (stx) -> Expr (expr)
@@ -25,12 +26,12 @@
           #:literals (let λ)
           ; let form
           [(let name:id expr)
-           `(let ,#'name ,(parse #'expr))]
+           `(let ,stx ,#'name ,(parse #'expr))]
           ; lambda form
           [(λ (param*:id ...) expr)
-           `(λ (,(syntax->list #'(param* ...)) ...) ,(parse #'expr))]
+           `(λ ,stx (,(syntax->list #'(param* ...)) ...) ,(parse #'expr))]
           [(f arg* ...)
-           `(,(parse #'f) ,(map parse (syntax->list #'(arg* ...))) ...)]
+           `(,stx ,(parse #'f) ,(map parse (syntax->list #'(arg* ...))) ...)]
           ; literal expression
           [x #:when (ormap (λ (pred?) (pred? stx)) (list identifier? stx-number?))
              #'x]
