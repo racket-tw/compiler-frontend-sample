@@ -32,8 +32,7 @@
           [(f arg* ...)
            `(,(parse #'f) ,(map parse (syntax->list #'(arg* ...))) ...)]
           ; literal expression
-          [x #:when (or (identifier? stx)
-                        (stx-number? stx))
+          [x #:when (ormap (λ (pred?) (pred? stx)) (list identifier? stx-number?))
              #'x]
           [else (error 'syntax "unknown form: ~a" stx)]))
   (Expr stx))
