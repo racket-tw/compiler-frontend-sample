@@ -8,11 +8,14 @@
       (number? (syntax-e stx))
       #f))
 
+(define (unparse-id x)
+  (syntax->datum x))
+
 (define-language L0
   (terminals
    (syntax (stx))
-   (identifier (name param))
-   (stx-number (num)))
+   ((identifier (name param)) . => . unparse-id)
+   ((stx-number (num)) . => . syntax-e))
   (Expr (expr)
         num
         name
